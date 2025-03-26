@@ -7,6 +7,7 @@ import {Input} from "antd";
 import {useForm ,Controller} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
 import * as Yup from "yup"
+import { NavLink } from "react-router";
 
 
 interface ICredentialType {
@@ -40,8 +41,8 @@ const HomePage = () => {
   console.log(errors)
   
   return (
-    <div className="bg-violet-600 h-screen flex justify-center items-center">
-      <div className="bg-white w-96 rounded-md p-4">
+    <div className="h-screen flex justify-center items-center">
+      <div className="bg-white shadow-2xl shadow-violet-400 border-2 border-violet-600 w-96 rounded-md p-4 font-serif">
         <h1 className="text-violet-600 text-center font-bold text-2xl flex items-center justify-center gap-2">
           <FaUser /> {data}
         </h1>
@@ -127,10 +128,8 @@ const HomePage = () => {
         </div>
 
         <div className="text-center text-sm mt-3">
-          New user?
-          <a href="/register" className="underline">
-            Register here
-          </a>
+          New user? {" "}
+          <NavLink to="/register" className="font-bold text-violet-600 underline">Register here</NavLink>
         </div>
         </form>
       </div>

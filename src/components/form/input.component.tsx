@@ -1,13 +1,16 @@
-import React, { ChangeEventHandler, ReactNode} from "react";
-import { Input } from "antd";
-import { useController } from "react-hook-form";
+import React, { ReactNode} from "react";
+import { Select, Input,Radio } from "antd";
+import { Controller, useController } from "react-hook-form";
 
 export interface IClassProps {
   classes?: string | null;
 }
 export interface IInputProps extends IClassProps {
   id: string;
-  changeHandle:ChangeEventHandler<HTMLInputElement>
+  errorMsg? : string | null
+  // changeHandle:ChangeEventHandler<HTMLInputElement>
+  control:any
+  type:string
 }
 export interface ITextInput extends IInputProps {
   type: string;
@@ -15,7 +18,7 @@ export interface ITextInput extends IInputProps {
 export interface IPasswordInput extends IInputProps {}
 export interface IInputLabel extends IClassProps {
   htmlFor: string | undefined;
-  children: ReactNode;
+  children?: ReactNode;
 }
 export const TextInputComponent = (props: Readonly<ITextInput>) => {
   //custom component
@@ -33,7 +36,7 @@ export const TextInputComponent = (props: Readonly<ITextInput>) => {
         //   // console.log(event) => logs current target and target with diffrernt props
         //   console.log(event.target.value)
         // }}
-        onChange={props.changeHandle}
+        // onChange={props.changeHandle}
       />
 
       <span></span>
@@ -46,9 +49,10 @@ export const TextInputComponent = (props: Readonly<ITextInput>) => {
 interface IInputTextHook {
   name:string,
   control:any,
-  type:string,
+  type?:string,
   classes?: string | null
-
+  errorMsg?: string | null
+  options?:Array<{label:String, value:string}>
 }
 export const TextInputComponentHook = (props: Readonly<IInputTextHook>) => {
   const {field} = useController({
@@ -70,22 +74,54 @@ export const TextInputComponentHook = (props: Readonly<IInputTextHook>) => {
 };
 
 
-
-
-export const PasswordInputComponent = ({
-  id,
-  classes = "",
-  changeHandle
-}: Readonly<IPasswordInput>) => {
+export const TextInputComponentController = (props: Readonly<IInputTextHook>) => {
   return (
     <>
-      <Input.Password
-        id={id}
-        className={`${classes}`}
-        placeholder={`Enter your ${id} here.....`}
-        onChange={changeHandle}
+    <Controller
+      name={props.name}
+      control={props.control}
+      render={(field)=>{
+        return (
+          <>
+        <Input
+          type={props.type}
+          id={props.name}
+          status={props.errorMsg ? "error" : ''}
+          placeholder={`Enter your ${props.name}`}
+          {...field}
+        />
+        <span className="text-sm text-red-400 italic">{props?.errorMsg}</span>
+          </>
+        )
+      }}
+    ></Controller>
+    </>
+  );
+};
+
+
+
+export const PasswordInputComponentController = (props: Readonly<IPasswordInput>) => {
+
+  return (
+    <>
+    <Controller
+      name={props.id}
+      control={props.control}
+      render={() =>(
+        <>
+        <Input.Password
+        id={props.id}
+        type={props.type}
+        className={`${props.classes}`}
+        status={props.errorMsg ? "error" : ''}
+        placeholder={`Enter your ${props.id} here.....`}
       />
-      <span></span>
+      <span className="text-sm italic text-red-500">{props?.errorMsg}</span>
+        </>
+      )}
+    />
+
     </>
   );
 };
@@ -103,3 +139,83 @@ export const InputLabel = ({
     </>
   );
 };
+
+
+export const RadioInputController =(props:Readonly<IInputTextHook>) =>{
+  return(
+    <>
+    <Controller 
+    name={props.name} 
+    control={props.control}
+    
+
+      render={(field) => (
+        <>
+          <Radio.Group
+          {...field}
+          options={props.options}/>
+           <span className="text-sm italic text-red-500">{props?.errorMsg}</span>
+        </>
+      )}
+    />
+    </>
+  )
+}
+
+interface ISelectInput {
+  name:string,
+  control:any
+  errorMsg?: string | null
+  options:Array<{label:String, value:string}>
+
+}
+
+export const SelectInputController =(props:Readonly<ISelectInput>) =>{
+  return(
+    <>
+    <Controller
+    name={props.name}
+    control={props.control}
+    render={(field) =>(
+      <>
+        <Select 
+        {...field}
+        options={props.options}
+        className="w-full"
+        />
+        <span className="text-sm italic text-red-500">{props.errorMsg}</span>
+      </>
+    )}
+    />
+    </>
+  )
+}
+
+
+
+interface IAddressInput {
+  name:string,
+  control:any
+  erroMsg?:string | null
+  rows?:number | 1
+  maxRows?:number | 3
+}
+
+export const AddressInputController = (props:Readonly<IAddressInput>) =>{
+  return(
+    <Controller 
+      control={props.control}
+      name={props.name}
+      render={(field) =>(
+        <>
+         <Input.TextArea
+         {...field} 
+         autoSize={{ minRows: props.rows as number, maxRows: props.maxRows as number }}
+         placeholder="Enter your street, city, and postal code" />
+         <span className="text-sm text-red-500 italic">{props.erroMsg}</span>
+        </>
+      )}
+    
+    />
+  )
+}
