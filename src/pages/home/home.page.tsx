@@ -1,7 +1,7 @@
 
 import { FaUser } from "react-icons/fa";
 import { InputLabel } from "../../components/form/input.component";
-import { Checkbox } from "antd";
+import { Button, Checkbox } from "antd";
 import {useState} from "react";
 import {Input} from "antd";
 import {useForm ,Controller} from "react-hook-form"
@@ -123,8 +123,13 @@ const HomePage = () => {
             <a href="/forget-password">Forget Password?</a>
           </div>
         </div>
-        <div className="text-white font-bold  bg-violet-600 rounded-md text-center p-2 mt-3 w-full hover:text-violet-600 hover:bg-white hover:border-2 hover:border-violet-600">
-          <button type="submit"> Login</button>
+        <div className="mt-3
+        ">
+          <Button 
+             type="primary"
+             className="bg-violet-700! w-full font-bold h-9! text-[17px]!"
+             htmlType="submit"
+          >Login</Button>
         </div>
 
         <div className="text-center text-sm mt-3">

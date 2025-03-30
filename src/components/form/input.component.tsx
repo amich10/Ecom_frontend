@@ -18,7 +18,9 @@ export interface ITextInput extends IInputProps {
 export interface IPasswordInput extends IInputProps {}
 export interface IInputLabel extends IClassProps {
   htmlFor: string | undefined;
-  children?: ReactNode;
+  children?: ReactNode; 
+
+  
 }
 export const TextInputComponent = (props: Readonly<ITextInput>) => {
   //custom component
@@ -80,7 +82,9 @@ export const TextInputComponentController = (props: Readonly<IInputTextHook>) =>
     <Controller
       name={props.name}
       control={props.control}
-      render={(field)=>{
+      render={({field}
+        
+      )=>{
         return (
           <>
         <Input
@@ -108,12 +112,13 @@ export const PasswordInputComponentController = (props: Readonly<IPasswordInput>
     <Controller
       name={props.id}
       control={props.control}
-      render={() =>(
+      render={({field}) =>(
         <>
         <Input.Password
         id={props.id}
         type={props.type}
         className={`${props.classes}`}
+        {...field}
         status={props.errorMsg ? "error" : ''}
         placeholder={`Enter your ${props.id} here.....`}
       />
@@ -140,7 +145,6 @@ export const InputLabel = ({
   );
 };
 
-
 export const RadioInputController =(props:Readonly<IInputTextHook>) =>{
   return(
     <>
@@ -149,7 +153,7 @@ export const RadioInputController =(props:Readonly<IInputTextHook>) =>{
     control={props.control}
     
 
-      render={(field) => (
+      render={({field}) => (
         <>
           <Radio.Group
           {...field}
@@ -176,7 +180,7 @@ export const SelectInputController =(props:Readonly<ISelectInput>) =>{
     <Controller
     name={props.name}
     control={props.control}
-    render={(field) =>(
+    render={({field}) =>(
       <>
         <Select 
         {...field}
@@ -206,7 +210,7 @@ export const AddressInputController = (props:Readonly<IAddressInput>) =>{
     <Controller 
       control={props.control}
       name={props.name}
-      render={(field) =>(
+      render={({field}) =>(
         <>
          <Input.TextArea
          {...field} 
