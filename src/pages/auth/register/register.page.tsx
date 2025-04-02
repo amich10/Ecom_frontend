@@ -1,5 +1,5 @@
 import { Button, Upload} from "antd";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import {
   AddressInputController,
   InputLabel,
@@ -14,8 +14,8 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import * as Yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup";
-import axiosInstance from "../../../config/axios.config";
 import authSvc from "../../../services/auth.service";
+import { NotificationType, notifyUserRegistration } from "../../../utilities/helpers";
 
 export const RegisterPage = () => {
   const RegisterDTO = Yup.object({
@@ -80,24 +80,21 @@ export const RegisterPage = () => {
     resolver:yupResolver(RegisterDTO)
   });
 
+  //for redirection inside a component
+  const naviagte = useNavigate();
   const formSubmit = async (data: any) => {
-    //submit
-    console.log(data);
-
-    const response = await authSvc.postRequest('/auth/register',data,{file:true})
-
-    /* let response = await axiosInstance.post('/auth/register',data,{
-      headers:{
-        "Content-Type":"multipart/form-data"
-      },
-      // params: {}
-    })*/
-    console.log(response)
-
     try {
-      
+       //console.log(data);
+    const response = await authSvc.postRequest('/auth/register',data,{file:true})
+    console.log(response)
+    notifyUserRegistration("Your account has been created successfully. An email has been sent to your registered email to activate your accounnt.",NotificationType.SUCCESS)
+
+    //redirect to login page after sucess call
+    naviagte('/')
+
     } catch (exception) {
       console.log(exception)
+      notifyUserRegistration("Error occured in creating in your account",NotificationType.ERROR)
     }
   };
 
@@ -125,7 +122,7 @@ export const RegisterPage = () => {
   return (
     <>
       <div className="flex justify-center h-screen items-center py-10">
-        <div className="w-96 bg-white rounded-md p-4 shadow-2xl  shadow-violet-400 border-2 border-violet-700 font-serif">
+        <div className="w-120 bg-white rounded-md p-4 shadow-2xl  shadow-violet-400 border-2 border-violet-700 font-serif">
           <h1 className="text-center text-2xl font-bold text-violet-800 mb-6 animate-pulse">
             Register Now
           </h1>

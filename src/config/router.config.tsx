@@ -7,6 +7,8 @@
 
 import { RouterProvider } from "react-router";
 import {router} from "./routes.config"
+import {ToastContainer} from "react-toastify"
+import { AuthProvider } from "../context/auth.context";
 
 
 const RouterConfig = () =>{
@@ -54,7 +56,10 @@ const RouterConfig = () =>{
         </Routes>
         </BrowserRouter> */}
 
+        <AuthProvider>
+        <ToastContainer theme="light" />
         <RouterProvider router={router}></RouterProvider>
+        </AuthProvider>
 
         </>
     )

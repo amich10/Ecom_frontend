@@ -1,20 +1,14 @@
 
 import { FaUser } from "react-icons/fa";
-import { InputLabel } from "../../components/form/input.component";
-import { Button, Checkbox } from "antd";
+import { InputLabel, PasswordInputComponentController, SubmitButton, TextInputComponentController } from "../../components/form/input.component";
+import { Button } from "antd";
 import {useState} from "react";
-import {Input} from "antd";
-import {useForm ,Controller} from "react-hook-form"
+import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
 import * as Yup from "yup"
 import { NavLink } from "react-router";
+import { useAuth, ICredentials } from "../../context/auth.context";
 
-
-interface ICredentialType {
-  email: string;
-  password: string;
-  termsAndCondition: boolean;
-}
 
 const HomePage = () => {
   const [data] = useState("Login");
@@ -22,34 +16,36 @@ const HomePage = () => {
   const LoginDTO = Yup.object({
     email:Yup.string().email().required(),
     password:Yup.string().required(),
-    termsAndCondition:Yup.boolean().required().oneOf([true]),
+    // termsAndCondition:Yup.boolean().required().oneOf([true]),
   })
 
-   const {control, handleSubmit, formState: {errors}} = useForm({
+   const {control, handleSubmit, formState: {errors,isSubmitting}} = useForm({
     defaultValues:{
       email: "",
       password: "",
-      termsAndCondition: false,
-    } as  ICredentialType,
+      // termsAndCondition: false,
+    } as  ICredentials,
     resolver:yupResolver(LoginDTO)
    });
 
-  const submitHandler = (data:ICredentialType) =>{
-    console.log("Submit handler called")
-    console.log(data)
-  }
+
+   const {login} = useAuth()
+  // const submitHandler = (data:ICredentialType) =>{
+  //   console.log("Submit handler called")
+  //   console.log(data)
+  // }
   console.log(errors)
   
   return (
     <div className="h-screen flex justify-center items-center">
-      <div className="bg-white shadow-2xl shadow-violet-400 border-2 border-violet-600 w-96 rounded-md p-4 font-serif">
+      <div className="bg-white shadow-2xl shadow-violet-400 border-2 border-violet-600 w-120 rounded-md p-4 font-serif">
         <h1 className="text-violet-600 text-center font-bold text-2xl flex items-center justify-center gap-2">
           <FaUser /> {data}
         </h1>
-        <form onSubmit={handleSubmit(submitHandler)}>
+        <form onSubmit={handleSubmit(login)}>
         <div className="mt-3">
           <InputLabel htmlFor="email">Email</InputLabel>
-          <Controller
+          {/* <Controller
             control={control}
             name="email"
             // defaultValue=""
@@ -68,11 +64,18 @@ const HomePage = () => {
                 </>
               )
             }}
+          /> */}
+
+          <TextInputComponentController 
+            name="email"
+            control={control}
+            type="email"
+            errorMsg={errors?.email?.message}
           />
         </div>
         <div className="mt-3">
           <InputLabel htmlFor="password">Password</InputLabel>
-          <Controller
+          {/* <Controller
             control={control}
             name="password"
             // defaultValue=""
@@ -90,11 +93,17 @@ const HomePage = () => {
                 </>
               )
             }}
+          /> */}
+          <PasswordInputComponentController 
+          type="password"
+          id="password"
+          control={control}
+          errorMsg={errors?.password?.message}
           />
         </div>
         <div className="flex justify-between mt-3 text-sm">
           <div className="flex">
-            <Controller
+            {/* <Controller
               control={control}
               name="termsAndCondition"
               render={({field}) =>{
@@ -111,12 +120,13 @@ const HomePage = () => {
                 )
               }}
 
-            />
+            /> */}
             <InputLabel htmlFor="terms-and-conditons">
-              Agree to{" "}
-              <a href="/terms-and-conditions" className="underline">
+              By loggin I agree to the {" "}
+              <NavLink  target="_blank" to="/terms-and-conditions" className="underline">  
                 terms and conditions
-              </a>
+              </NavLink>
+              {/* use anchor tag when you want to redirect from your app to external resources */}
             </InputLabel>
           </div>
           <div className="text-violet-600 font-semibold underline">
@@ -125,11 +135,7 @@ const HomePage = () => {
         </div>
         <div className="mt-3
         ">
-          <Button 
-             type="primary"
-             className="bg-violet-700! w-full font-bold h-9! text-[17px]!"
-             htmlType="submit"
-          >Login</Button>
+          <SubmitButton isSubmitting={isSubmitting}>Login</SubmitButton>
         </div>
 
         <div className="text-center text-sm mt-3">

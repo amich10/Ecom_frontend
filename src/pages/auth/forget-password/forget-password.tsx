@@ -1,29 +1,59 @@
+import { useForm } from "react-hook-form"
+import { InputLabel, SubmitButton, TextInputComponentController } from "../../../components/form/input.component"
+import { NavLink, useNavigate } from "react-router"
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { useAuth } from "../../../context/auth.context"
+
+interface IEmailType{
+    email:string
+}
+
 export const ForgetPassword = () =>{
+    const forgetPasswordDTO = yup.object({
+        email:yup.string().email().required()
+    })
+
+    
+    const{control,handleSubmit,formState:{errors,isSubmitting}} =useForm({
+        defaultValues:{
+            email:""
+        } as IEmailType,
+        resolver:yupResolver(forgetPasswordDTO)
+    })
+
+    const navigate = useNavigate()
+    const {forgetPasswordReq} = useAuth()
+
+    const submitHandler = async(data:{email:string}) =>{
+        await forgetPasswordReq(data);
+        navigate('/')
+    }
     return (
         <>
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1 className="text-2xl font-bold mb-4">Forget Password</h1>
-            <form className="w-full max-w-sm">
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                        Email Address
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button"
-                    >
-                        Send Reset Link
-                    </button>
-                </div>
-            </form>
+        <div className="h-screen flex justify-center items-center">
+           <form onSubmit={handleSubmit(submitHandler)}>
+           <div className="w-120 rounded-md border-2 border-violet-700 shadow-xl shadow-violet-600 p-6 font-serif">
+            <h1 className="text-center text-2xl text-violet-600 font-bold ">Forget Password?</h1>
+            <div className="mt-3">
+            <InputLabel htmlFor="email" classes={`text-violet-600 text-lg`}>Enter your Email</InputLabel>
+            <TextInputComponentController name="email" type="email" control={control} errorMsg={errors?.email?.message}/>
+            </div>
+            <div className="mt-4 mb-1">
+                <SubmitButton isSubmitting={isSubmitting}>Continue</SubmitButton>
+            </div>
+                <p className="text-center mt-3 text-lg font-semibold text-violet-700">Or</p>
+            <div className=" mt-3 flex flex-col items-center justify-center">
+            <div>
+                Already have an Account?{" "}<NavLink to="/" className="underline text-violet-600">Login Here</NavLink>
+            </div>
+            <div>
+                Want to create a new Account?{" "}<NavLink to="/register" className="underline text-violet-600">Register Here</NavLink>
+            </div>  
+            </div>
+            
+            </div>
+           </form>
         </div>
         </>
     )

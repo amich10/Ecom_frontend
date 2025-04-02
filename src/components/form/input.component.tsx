@@ -1,5 +1,5 @@
 import React, { ReactNode} from "react";
-import { Select, Input,Radio } from "antd";
+import { Select, Input,Radio,Button } from "antd";
 import { Controller, useController } from "react-hook-form";
 
 export interface IClassProps {
@@ -221,5 +221,20 @@ export const AddressInputController = (props:Readonly<IAddressInput>) =>{
       )}
     
     />
+  )
+}
+
+
+interface IButtonProps {
+ isSubmitting?: boolean,
+  children: React.ReactNode
+}
+export const SubmitButton = (props: Readonly<IButtonProps>) => {
+  return (
+    <>
+    <Button htmlType="submit" type="primary"
+     disabled={props.isSubmitting} 
+     className="bg-violet-600! text-white!  h-10! !font-bold w-full text-lg! hover:bg-white! hover:text-violet-600! hover:border-violet-600! disabled:bg-white!">{props.children}</Button>
+    </>
   )
 }
