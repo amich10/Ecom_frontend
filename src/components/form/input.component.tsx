@@ -1,4 +1,4 @@
-import React, { ReactNode} from "react";
+import React, { ReactNode, useState} from "react";
 import { Select, Input,Radio,Button } from "antd";
 import { Controller, useController } from "react-hook-form";
 
@@ -228,13 +228,77 @@ export const AddressInputController = (props:Readonly<IAddressInput>) =>{
 interface IButtonProps {
  isSubmitting?: boolean,
   children: React.ReactNode
+  classes?:string
 }
 export const SubmitButton = (props: Readonly<IButtonProps>) => {
   return (
     <>
     <Button htmlType="submit" type="primary"
      disabled={props.isSubmitting} 
-     className="bg-violet-600! text-white!  h-10! !font-bold w-full text-lg! hover:bg-white! hover:text-violet-600! hover:border-violet-600! disabled:bg-white!">{props.children}</Button>
+     className={props.classes}>{props.children}</Button>
+    </>
+  )
+}
+
+export const CancelButton = (props: Readonly<IButtonProps>) => {
+  return (
+    <>
+    <Button htmlType="reset" type="primary"
+     disabled={props.isSubmitting} 
+     className="bg-red-700! text-white! h-10!">{props.children}</Button>
+    </>
+  )
+}
+
+
+
+import type { UploadProps, UploadFile } from "antd";
+import { Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+
+
+
+interface IFileUploadProps{
+  name:string,
+  setValue:(name:string, file:any) =>void;
+  thumbnail?:string | null
+}
+
+export const FormSingleImageUploader = ({name,setValue,thumbnail=''}:IFileUploadProps) =>{
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+    
+const props: UploadProps = {
+  onRemove: (file) => {
+    const index = fileList.indexOf(file);
+    const newFileList = fileList.slice();
+    newFileList.splice(index, 1);
+    setFileList(newFileList);
+  },
+  beforeUpload: (file) => {
+    console.log(file)
+    setFileList([file]);
+    setValue(name, file as any)
+    return false;
+  },
+  fileList,
+};
+
+  return (
+    <>
+     <div className="flex justify-start gap-10">
+      <div>
+        <Upload {...props}>
+            <Button icon={<UploadOutlined />}>Select Image</Button>
+        </Upload>
+      </div>
+      <div>
+        {fileList && fileList.length ? (
+          <><img src={URL.createObjectURL(fileList[0] as any)} alt="" className=" h-[100px] w-[300px]"/></> //preparing image from object
+
+          // for preloading image in edit banner
+          ) : thumbnail ? <><img src={thumbnail} className="h-[100px] w-[300px]" alt="" /></>:<img src="https://placehold.co/300x75/white/teal?text=No Image" alt="alternate image"/>} 
+      </div>
+     </div>
     </>
   )
 }

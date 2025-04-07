@@ -1,4 +1,22 @@
 import axiosInstance from "../config/axios.config";
+// import { WebStorageConstant } from "../config/constats";
+// import { getLocalStorage } from "../utilities/helpers";
+
+
+export interface IResult {
+    data?: Array<Record<string, any>> | Record<string, any> | null | any, //Record<string, any> for an object with string keys and any values.
+    message:string,
+    error?:any,
+    options:any,
+    status:string,
+
+}
+
+export interface IResponseType {
+    result: IResult 
+    status:number
+}
+
 
 abstract class HttpService {
     #headers: any = {};
@@ -23,12 +41,13 @@ abstract class HttpService {
         }
 
         // Authorization token check
-        if (config.auth && config.auth.token) {
-            this.#headers = {
-                ...this.#headers,
-                "Authorization": `Bearer ${config.auth.token}`
-            };
-        }
+        // if (config.auth) {
+        //     let token = getLocalStorage(WebStorageConstant.ACCESS_TOKEN)
+        //     this.#headers = {
+        //         ...this.#headers,
+        //         "Authorization": `Bearer ${token}`
+        //     };
+        // }
 
         // Set request params if provided
         if (config.params) {
@@ -41,21 +60,25 @@ abstract class HttpService {
         };
     }
 
-    getRequest = async (url: string, config: any = {}) => {
+    getRequest = async (url: string, config: any = {}): Promise<IResponseType> => {
         try {
             this.#setConfig(config);
             const {data : responseData ,status} = await axiosInstance.get(url, this.#config);
+            
             return {
                 result: responseData,
                 status: status
             }
-        } catch (exception) {
-            console.error("GET Request Error:", exception);
-            throw exception;
+        } catch (exception:any) {   //type:any because exception may have any data type
+            //console.error("GET Request Error:", exception);
+            throw {
+                response: exception?.response?.data,
+                status: exception.response?.status
+            }
         }
     };
 
-    postRequest = async (url: string, data: any, config: any = {}) => {
+    postRequest = async (url: string, data: any, config: any = {}):Promise<IResponseType> => {
         try {
             this.#setConfig(config);
             const {data : responseData ,status} = await axiosInstance.post(url, data, this.#config);
@@ -72,7 +95,7 @@ abstract class HttpService {
         }
     };
 
-    putRequest = async (url: string, data: any, config: any = {}) => {
+    putRequest = async (url: string, data: any, config: any = {}):Promise<IResponseType> => {
         try {
             this.#setConfig(config);
             const {data : responseData ,status} = await axiosInstance.put(url, data, this.#config);
@@ -88,7 +111,7 @@ abstract class HttpService {
         }
     };
 
-    patchRequest = async (url: string, data: any, config: any = {}) => {
+    patchRequest = async (url: string, data: any, config: any = {}):Promise<IResponseType> => {
         try {
             this.#setConfig(config);
             const  {data : responseData ,status} = await axiosInstance.patch(url, data, this.#config);
@@ -104,14 +127,20 @@ abstract class HttpService {
         }
     };
 
-    delRequest = async (url: string, config: any = {}) => {
+    delRequest = async (url: string, config: any = {}):Promise<IResponseType> => {
         try {
             this.#setConfig(config);
-            const response = await axiosInstance.delete(url, this.#config);
-            return response.data;
-        } catch (exception) {
-            console.error("DELETE Request Error:", exception);
-            throw exception;
+            const {data : responseData ,status} = await axiosInstance.delete(url, this.#config);
+            return {
+                result: responseData,
+                status: status
+            }
+        } catch (exception:any) {
+            //console.error("DELETE Request Error:", exception);
+            throw {
+                response: exception?.response?.data,
+                status: exception.response?.status
+            }
         }
     };
 }
