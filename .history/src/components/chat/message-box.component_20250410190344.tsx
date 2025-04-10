@@ -1,0 +1,63 @@
+import { UserOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { RootState } from "../../config/store";
+import { useParams } from "react-router";
+import { useEffect } from "react";
+
+const MessageBox = () =>{
+  // const {name,image} = useSelector((root:RootState) =>{
+  //   return {
+  //     name:root.user.userDetail?.name,
+  //     image:root.user.userDetail?.image.optimizedUrl
+  //   }
+  // })
+
+  const [query,setQuery] = useParams()
+
+  useEffect(() =>{
+    if(query.get("user")){
+      console.log(query.get("user"))
+    }
+  },[query])
+    return(
+        <>
+        <div className="p-4 border-b border-gray-200">
+            <h1 className="text-lg font-bold text-center text-blue-600 flex items-center justify-center gap-2">
+            {/* {image ? (
+            <img
+              src={image}
+              alt="user-avatar"
+              className="h-10 w-10 rounded-full"
+            />
+          ) : (
+            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+              <span className="text-white text-xl">U</span> {/* Placeholder text */}
+            </div>
+          )} */}
+
+          {/* If name exists, show name, else show 'User' */}
+          {/* {name ? name : "User"} */}
+
+            </h1> 
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div>
+              <div className="bg-blue-100 p-2 rounded-md w-fit max-w-xs">
+                <p className="text-sm">Hello! How can I help you?</p>
+              </div>
+              <span className="text-xs text-gray-500">10:00 AM</span>
+            </div>
+            <div className="text-right">
+              <div className="bg-green-100 p-2 rounded-md w-fit max-w-xs ml-auto">
+                <p className="text-sm">I need assistance with my order.</p>
+              </div>
+              <span className="text-xs text-gray-500">10:02 AM</span>
+            </div>
+        </div>
+        </>
+    )
+}
+
+export default MessageBox;
