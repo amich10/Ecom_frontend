@@ -69,19 +69,19 @@ export const fluSessionalStorage =() =>{
 ////local storage
 //set local storage
 export const setLocalStorage = (name:string,value:string) =>{
-    localStorage.setItem(name,value)
+    return localStorage.setItem(name,value)
 }
 //get localstrage
 export const getLocalStorage = (name:string) =>{
-    localStorage.getItem(name)
+    return localStorage.getItem(name)
 }
 
 //remove from session storage
 export const removeLocalStorage = (name:string) =>{
-    localStorage.removeItem(name)
+    return localStorage.removeItem(name);
 }
 
 //clean all data or remove
 export const flushLocalStorage =() =>{
-    localStorage.clean()
+    return localStorage.clear()
 }

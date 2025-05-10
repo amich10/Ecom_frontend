@@ -1,0 +1,37 @@
+import { MessageOutlined, UserOutlined } from "@ant-design/icons";
+import { Content } from "antd/es/layout/layout";
+import { Input } from "antd";
+
+const ChatPage = () => {
+    return (
+        <>
+        <Content>
+            <div className="flex w-full h-full p-2">
+            <div className="w-1/4 h-full border-2 border-gray-300 rounded-md shadow-md bg-white">
+                {/* Left content */}
+                <div className="p-4">
+                    <h1 className="text-lg font-bold text-center mb-4 text-blue-600">
+                        <UserOutlined /> Users
+                    </h1>
+                    <Input.Search 
+                        placeholder="Search for users..." 
+                        enterButton 
+                        className="mb-4"
+                    />
+                </div>
+                <div className="overflow-y-auto h-[calc(100%-120px)]">
+            
+                       
+                </div>
+            </div>
+            <div className="w-3/4 h-full p-2 rounded-md">
+                {/* Right content */}
+                <h1 className="text-center text-lg font-bold p-2"><MessageOutlined /> Chats</h1>
+            </div>
+            </div>
+        </Content>
+        </>
+    )    
+};
+
+export default ChatPage;

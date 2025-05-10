@@ -1,0 +1,19 @@
+const SendMessage = () =>{
+    return(
+        <>
+          {/* Input */}
+          <div className="p-4 border-t border-gray-300">
+            <div className="flex items-center gap-2">
+              <Input.TextArea
+                placeholder="Type a message..."
+                className="flex-1 resize-none"
+                autoSize={{ minRows: 1, maxRows: 4 }}
+              />
+              <Button type="primary">Send</Button>
+            </div>
+          </div>
+        </>
+    )
+}
+
+export default SendMessage;
